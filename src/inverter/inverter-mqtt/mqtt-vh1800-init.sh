@@ -29,7 +29,7 @@ registerTopic () {
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
         -t "$MQTT_TOPIC/sensor/${MQTT_DEVICENAME}_$1/config" \
-        -m "$(paris_to_dict \
+        -m "$(pairs_to_dict \
             name                "${MQTT_DEVICENAME}_$1" \
             unit_of_measurement "$2" \
             state_topic         "$MQTT_TOPIC/sensor/${MQTT_DEVICENAME}_$1" \
@@ -44,7 +44,7 @@ registerInverterRawCMD () {
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
         -t "$MQTT_TOPIC/sensor/$MQTT_DEVICENAME/config" \
-        -m "$(paris_to_dict \
+        -m "$(pairs_to_dict \
             name        "$MQTT_DEVICENAME" \
             state_topic "$MQTT_TOPIC/sensor/$MQTT_DEVICENAME" \
         )"
