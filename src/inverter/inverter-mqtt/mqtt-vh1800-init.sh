@@ -16,9 +16,9 @@ MQTT_PASSWORD="$(get_config password)"
 # Splits arguments pairwise and interprets them as key: value to put
 # them into a json dict
 pairs_to_dict () {
-    jq --null-input '[
-        range(($ARGS.positional | length) / 2 | floor) |
-        {"key": ($ARGS.positional[.*2]), "value": $ARGS.positional[.*2+1]}
+    jq -r --null-input '[
+        range(($ARGS.positional | length) / 2 | floor) | .*2 |
+        {"key": ($ARGS.positional[.]), "value": $ARGS.positional[.+1]}
     ] | from_entries' --args "$@"
 }
 
