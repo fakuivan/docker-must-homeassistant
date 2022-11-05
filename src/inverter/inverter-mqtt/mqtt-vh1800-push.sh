@@ -10,6 +10,8 @@ MQTT_TOPIC="$(get_config topic)"
 MQTT_DEVICENAME="$(get_config devicename)"
 MQTT_USERNAME="$(get_config username)"
 MQTT_PASSWORD="$(get_config password)"
+MQTT_SERIAL_NO="$(get_config serial_number)"
+CLIENT_ID="${MQTT_DEVICENAME}_${MQTT_SERIAL_NO}"
 
 pushMQTTData () {
     local var="$1" value="$2"
@@ -19,7 +21,8 @@ pushMQTTData () {
         -p "$MQTT_PORT" \
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
-        -t "$MQTT_TOPIC/sensor/${MQTT_DEVICENAME}_$var" \
+        -i "$CLIENT_ID" \
+        -t "$MQTT_TOPIC/sensor/${CLIENT_ID}/_$var" \
         -m "$value"
 }
 
@@ -110,6 +113,7 @@ SENSORS=(
     AccumulatedDay
     AccumulatedHour
     AccumulatedMinute
+
     # Composite
     BatteryPercent
     AccumulatedChargerPower

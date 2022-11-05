@@ -12,15 +12,22 @@ MQTT_TOPIC="$(get_config topic)"
 MQTT_DEVICENAME="$(get_config devicename)"
 MQTT_USERNAME="$(get_config username)"
 MQTT_PASSWORD="$(get_config password)"
+MQTT_SERIAL_NO="$(get_config serial_number)"
+CLIENT_ID="${MQTT_DEVICENAME}_${MQTT_SERIAL_NO}"
 
 # Splits arguments pairwise and interprets them as key: value to put
 # them into a json dict
 pairs_to_dict () {
-    jq -r --null-input '[
+    jq -r '.*([
         range(($ARGS.positional | length) / 2 | floor) | .*2 |
         {"key": ($ARGS.positional[.]), "value": $ARGS.positional[.+1]}
-    ] | from_entries' --args "$@"
+    ] | from_entries)' --args "$@"
 }
+
+DEVICE="{ \"device\": $(pairs_to_dict \
+    name "$MQTT_DEVICENAME" \
+    ids  "$MQTT_SERIAL_NO"
+)}"
 
 registerTopic () {
     mosquitto_pub \
@@ -28,11 +35,13 @@ registerTopic () {
         -p "$MQTT_PORT" \
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
-        -t "$MQTT_TOPIC/sensor/${MQTT_DEVICENAME}_$1/config" \
-        -m "$(pairs_to_dict \
+        -i "$CLIENT_ID" \
+        -t "$MQTT_TOPIC/sensor/$CLIENT_ID/_$1/config" \
+        -m "$(echo "$DEVICE" | pairs_to_dict \
             name                "${MQTT_DEVICENAME}_$1" \
+            unique_id           "${MQTT_SERIAL_NO}_$1" \
             unit_of_measurement "$2" \
-            state_topic         "$MQTT_TOPIC/sensor/${MQTT_DEVICENAME}_$1" \
+            state_topic         "$MQTT_TOPIC/sensor/$CLIENT_ID/_$1" \
             icon                "mdi:$3"
         )"
 }
@@ -43,10 +52,12 @@ registerInverterRawCMD () {
         -p "$MQTT_PORT" \
         -u "$MQTT_USERNAME" \
         -P "$MQTT_PASSWORD" \
-        -t "$MQTT_TOPIC/sensor/$MQTT_DEVICENAME/config" \
-        -m "$(pairs_to_dict \
-            name        "$MQTT_DEVICENAME" \
-            state_topic "$MQTT_TOPIC/sensor/$MQTT_DEVICENAME" \
+        -i "$CLIENT_ID" \
+        -t "$MQTT_TOPIC/sensor/$CLIENT_ID/COMMANDS/config" \
+        -m "$(echo "$DEVICE" | pairs_to_dict \
+            name        "${MQTT_DEVICENAME}_COMMANDS" \
+            unique_id   "${MQTT_SERIAL_NO}"
+            state_topic "$MQTT_TOPIC/sensor/$CLIENT_ID/COMMANDS"
         )"
 }
 

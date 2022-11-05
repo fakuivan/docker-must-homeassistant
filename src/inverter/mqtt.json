@@ -4,5 +4,6 @@
   "topic": "homeassistant",
   "devicename": "must-inverter",
   "username": "",
-  "password": ""
+  "password": "",
+  "serial_number": "fcacf9b7-7709-4ca9-bbc3-4c78dbb54fe7"
 }
