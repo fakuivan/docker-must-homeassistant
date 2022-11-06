@@ -56,7 +56,7 @@ registerInverterRawCMD () {
         -t "$MQTT_TOPIC/sensor/$CLIENT_ID/COMMANDS/config" \
         -m "$(echo "$DEVICE" | pairs_to_dict \
             name        "${MQTT_DEVICENAME}_COMMANDS" \
-            unique_id   "${MQTT_SERIAL_NO}"
+            unique_id   "${MQTT_SERIAL_NO}" \
             state_topic "$MQTT_TOPIC/sensor/$CLIENT_ID/COMMANDS"
         )"
 }
