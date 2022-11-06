@@ -1,7 +1,7 @@
 #See https://aka.ms/containerfastmode to understand how Visual Studio uses this Dockerfile to build your images for faster debugging.
 
 ARG  MACHINE_ARCH
-FROM mcr.microsoft.com/dotnet/core/runtime:3.1-buster-slim${MACHINE_ARCH} AS base
+FROM mcr.microsoft.com/dotnet/runtime:3.1-bullseye-slim${MACHINE_ARCH} AS base
 WORKDIR /app
 
 RUN apt update && apt install -y \
@@ -10,7 +10,7 @@ RUN apt update && apt install -y \
         mosquitto-clients
 
 ARG  MACHINE_ARCH
-FROM mcr.microsoft.com/dotnet/core/sdk:3.1-buster${MACHINE_ARCH} AS build
+FROM mcr.microsoft.com/dotnet/sdk:3.1-bullseye${MACHINE_ARCH} AS build
 WORKDIR /src
 COPY ["src/inverter/inverter.csproj", "src/inverter/"]
 RUN dotnet restore "src/inverter/inverter.csproj"
