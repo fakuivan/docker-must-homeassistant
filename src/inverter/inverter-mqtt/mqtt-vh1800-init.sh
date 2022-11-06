@@ -24,7 +24,7 @@ pairs_to_dict () {
     ] | from_entries)' --args "$@"
 }
 
-DEVICE="{ \"device\": $(pairs_to_dict \
+DEVICE="{ \"device\": $(echo '{}' | pairs_to_dict \
     name "$MQTT_DEVICENAME" \
     ids  "$MQTT_SERIAL_NO"
 )}"
