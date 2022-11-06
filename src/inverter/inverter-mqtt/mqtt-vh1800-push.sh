@@ -12,11 +12,7 @@ MQTT_USERNAME="$(get_config username)"
 MQTT_PASSWORD="$(get_config password)"
 
 pushMQTTData () {
-    local var="$1" value
-    value="$(echo "$INVERTER_DATA" | jq --arg var "$var" '.[$var]' -r)"
-    if [ -z "$value" ]; then
-        return $?
-    fi
+    local var="$1" value="$2"
 
     mosquitto_pub \
         -h "$MQTT_SERVER" \
@@ -25,6 +21,28 @@ pushMQTTData () {
         -P "$MQTT_PASSWORD" \
         -t "$MQTT_TOPIC/sensor/${MQTT_DEVICENAME}_$var" \
         -m "$value"
+}
+
+dict_filter_null_with () {
+    local dict="$1"
+    shift
+    jq '
+        $ARGS.positional |
+        map(
+            {"key": ., "value": $inputs[.]} |
+            select (.value != null)
+        ) | from_entries' -n \
+        --argjson inputs "$dict" \
+        --args "$@"
+}
+
+dict_to_associative_array () {
+    echo "( $(jq -r '
+        . |
+        to_entries |
+        map("[\(.key | @sh)]=\(.value | tostring | @sh)") |
+        join(" ")
+    ') )"
 }
 
 SENSORS=(
@@ -106,7 +124,12 @@ SENSORS=(
 )
 
 INVERTER_DATA="$(timeout 10 dotnet inverter.dll poll -a=false)"
+# shellcheck disable=2155
+declare -A SENSORS_DATA="$(
+    dict_filter_null_with "$INVERTER_DATA" "${SENSORS[@]}" | \
+    dict_to_associative_array
+)"
 
-for sensor in "${SENSORS[@]}"; do
-    pushMQTTData "$sensor"
+for sensor in "${!SENSORS_DATA[@]}"; do
+    pushMQTTData "$sensor" "${SENSORS_DATA["$sensor"]}"
 done
