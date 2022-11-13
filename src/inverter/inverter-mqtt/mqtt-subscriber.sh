@@ -11,12 +11,12 @@ MQTT_DEVICENAME="$(get_config devicename)"
 MQTT_USERNAME="$(get_config username)"
 MQTT_PASSWORD="$(get_config password)"
 
-while read rawcmd;
+while read -r rawcmd;
 do
 
     echo "Incoming request send: [$rawcmd] to inverter."
-    # TODO: There can be issues with how the command is interpreted
-    dotnet /app/inverter.dll set $rawcmd;
+    # https://superuser.com/a/1627765/551612
+    echo "$rawcmd" | xargs dotnet /app/inverter.dll set;
 
 done < <(
     mosquitto_sub \
