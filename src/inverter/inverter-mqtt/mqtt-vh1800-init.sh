@@ -126,6 +126,15 @@ registerTopic   "AccumulatedDay"                           "day"              "c
 registerTopic   "AccumulatedHour"                          "hour"             "clock-outline"
 registerTopic   "AccumulatedMinute"                        "min"              "timer-outline"
 
+# Manually added
+registerTopic   "ChargerSourcePriority"                    ""                 "state-machine"
+registerTopic   "SolarUseAim"                              ""                 "state-machine"
+registerTopic   "EnergyUseMode"                            ""                 "state-machine"
+registerTopic   "BatteryStopDischargingVoltage"            "Vdc-batt"         "current-dc"
+registerTopic   "BatteryStopChargingVoltage"               "Vdc-batt"         "current-dc"
+registerTopic   "BatteryLowVoltage"                        "Vdc-batt"         "current-dc"
+registerTopic   "BatteryHighVoltage"                       "Vdc-batt"         "current-dc"
+
 # Register composite topics manually for now
 
 registerTopic "BatteryPercent"                             "%"       "battery"

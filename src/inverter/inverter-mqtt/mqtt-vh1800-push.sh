@@ -114,6 +114,15 @@ SENSORS=(
     AccumulatedHour
     AccumulatedMinute
 
+    # Manually added
+    ChargerSourcePriority
+    SolarUseAim
+    EnergyUseMode
+    BatteryStopDischargingVoltage
+    BatteryStopChargingVoltage
+    BatteryLowVoltage
+    BatteryHighVoltage
+
     # Composite
     BatteryPercent
     AccumulatedChargerPower
@@ -127,7 +136,7 @@ SENSORS=(
     AccumulatedPvPower
 )
 
-INVERTER_DATA="$(timeout 10 dotnet inverter.dll poll -a=false)"
+INVERTER_DATA="$(timeout 10 dotnet inverter.dll poll -a=true)"
 # shellcheck disable=2155
 declare -A SENSORS_DATA="$(
     dict_filter_null_with "$INVERTER_DATA" "${SENSORS[@]}" | \
