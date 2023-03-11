@@ -122,6 +122,7 @@ SENSORS=(
     BatteryStopChargingVoltage
     BatteryLowVoltage
     BatteryHighVoltage
+    GridProtectStandard
 
     # Composite
     BatteryPercent
