@@ -123,6 +123,7 @@ SENSORS=(
     BatteryLowVoltage
     BatteryHighVoltage
     GridProtectStandard
+    BatteryType
 
     # Composite
     BatteryPercent

@@ -136,6 +136,7 @@ registerTopic   "BatteryStopChargingVoltage"               "Vdc-batt"         "c
 registerTopic   "BatteryLowVoltage"                        "Vdc-batt"         "current-dc"
 registerTopic   "BatteryHighVoltage"                       "Vdc-batt"         "current-dc"
 registerTopic   "GridProtectStandard"                      ""                 "certificate"
+registerTopic   "BatteryType"                              ""                 "battery-unknown"
 
 # Register composite topics manually for now
 
